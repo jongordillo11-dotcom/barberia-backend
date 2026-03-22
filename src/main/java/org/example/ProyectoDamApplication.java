@@ -5,7 +5,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 
-import java.awt.Desktop;
+import java.awt.*;
 import java.net.URI;
 
 @SpringBootApplication
@@ -18,16 +18,22 @@ public class ProyectoDamApplication {
                 .run(args);
     }
 
-    @EventListener({ApplicationReadyEvent.class})
+    @EventListener(ApplicationReadyEvent.class)
     public void abrirNavegadorAlArrancar() {
         try {
-            System.out.println("✅ Servidor arrancado.");
-            String url = "http://localhost:8081/index.html";
-            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-                Desktop.getDesktop().browse(new URI(url));
+            // Comprobamos si el entorno tiene pantalla/interfaz gráfica (Tu portátil SÍ, Railway NO)
+            if (!GraphicsEnvironment.isHeadless() && Desktop.isDesktopSupported()) {
+                Desktop desktop = Desktop.getDesktop();
+                if (desktop.isSupported(Desktop.Action.BROWSE)) {
+                    System.out.println("Pantalla detectada. Abriendo el navegador en el puerto 8081...");
+                    desktop.browse(new URI("http://localhost:8081"));
+                }
+            } else {
+                // Si entra aquí, es que estamos en Railway. No hace nada y no crashea.
+                System.out.println("Servidor en la nube detectado (sin pantalla). Todo OK, esperando conexiones.");
             }
         } catch (Exception e) {
-            System.out.println("No se pudo abrir el navegador automáticamente.");
+            System.out.println("Error al intentar abrir el navegador: " + e.getMessage());
         }
     }
 }
