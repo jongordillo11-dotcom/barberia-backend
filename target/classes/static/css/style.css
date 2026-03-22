@@ -1,0 +1,265 @@
+/* ==========================================================================
+   1. VARIABLES, RESET Y TIPOGRAFÍA GENERAL
+   ========================================================================== */
+:root {
+    --gold: #d4af37;
+    --gold-hover: #f1c40f;
+    --dark-bg: #121212;
+    --card-bg: #1a1a1a;
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+    background-color: var(--dark-bg);
+    color: #ffffff;
+    font-family: 'Montserrat', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, .sidebar-header, .navbar-brand, .font-elegant {
+    font-family: 'Playfair Display', serif;
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+/* --- SCROLLBAR GENERAL --- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #121212; }
+::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 4px; }
+
+/* ==========================================================================
+   2. COMPORTAMIENTOS POR PÁGINA (Aislamiento)
+   ========================================================================== */
+
+/* --- LANDING (index.html) --- */
+body.index-page {
+    display: block !important;
+    overflow-y: auto !important;
+    overflow-x: hidden;
+}
+
+/* --- LOGIN / REGISTRO --- */
+body:not(.app-wrapper):not(.index-page) {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow-y: auto !important;
+    padding: 20px;
+}
+
+/* ==========================================================================
+   3. PANEL DE CONTROL (Admin y Cliente)
+   ========================================================================== */
+body.app-wrapper { overflow: hidden; } /* Bloquea el scroll general del body en la app */
+.app-wrapper { display: flex; height: 100vh; width: 100%; }
+
+.sidebar {
+    width: 260px;
+    background-color: #1a1a1a;
+    border-right: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    overflow-y: auto;
+    z-index: 10;
+    flex-shrink: 0;
+}
+
+.sidebar-header { text-align: center; }
+
+.sidebar-nav .nav-link {
+    color: #888 !important;
+    font-size: 0.95rem;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+.sidebar-nav .nav-link i { margin-right: 12px; font-size: 1.1rem; transition: all 0.3s ease; }
+.sidebar-nav .nav-link:hover {
+    background-color: rgba(212, 175, 55, 0.05);
+    color: #d4af37 !important;
+    transform: translateX(5px);
+}
+.sidebar-nav .nav-link.active {
+    background-color: rgba(212, 175, 55, 0.15);
+    color: #d4af37 !important;
+    font-weight: 600;
+    border-left: 4px solid #d4af37;
+    border-radius: 0 8px 8px 0;
+}
+.sidebar-nav .nav-link.active i { color: #d4af37; }
+
+.main-content { flex-grow: 1; overflow-y: auto; background-color: #121212; padding: 30px;}
+.header-bar { background-color: transparent; }
+
+/* ==========================================================================
+   4. TARJETAS PREMIUM, BOTONES Y FORMULARIOS (SaaS)
+   ========================================================================== */
+.premium-card {
+    background-color: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    color: #fff !important;
+}
+.premium-card:hover { border-color: #444; box-shadow: 0 8px 25px rgba(0,0,0,0.4); }
+
+.premium-card h6, .premium-card .text-muted { color: #ffffff !important; opacity: 1 !important; font-weight: 700 !important; }
+#counter-confirmadas, #counter-pendientes, #counter-canceladas, #counter-clientes { font-weight: 800; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
+
+.btn-outline-gold { color: #d4af37; border-color: #d4af37; text-decoration: none; padding: 10px 25px; border-radius: 4px; font-weight: bold; }
+.btn-outline-gold:hover { background-color: #d4af37; color: #000; }
+.btn-gold { background-color: #d4af37; color: #000 !important; font-weight: bold; border: none; padding: 12px 30px; border-radius: 4px; text-transform: uppercase; transition: 0.3s; text-decoration: none;}
+.btn-gold:hover { background-color: #b5952f; color: #fff !important; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); }
+
+.form-label { color: #fff !important; font-weight: 700; text-transform: uppercase; font-size: 0.8rem; margin-bottom: 8px; letter-spacing: 1px; }
+.form-control, .form-select { background-color: #222 !important; color: #fff !important; border: 1px solid #333 !important; border-radius: 8px; padding: 10px 15px; }
+.form-control:focus, .form-select:focus { border-color: #d4af37 !important; box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.15) !important; }
+
+.table-dark { background-color: transparent; --bs-table-bg: transparent; color: #fff; border-color: #333; }
+.table-dark th { color: #888 !important; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; border-bottom: 2px solid #333; }
+.table-dark td { border-bottom: 1px solid #2a2a2a; padding: 15px 10px; color: #fff;}
+
+/* ==========================================================================
+   5. CSS  PARA FULLCALENDAR
+   ========================================================================== */
+:root {
+    --fc-page-bg-color: transparent;
+    --fc-neutral-bg-color: transparent;
+    --fc-border-color: #333;
+    --fc-button-text-color: #d4af37;
+    --fc-button-bg-color: #222;
+    --fc-button-border-color: #333;
+    --fc-button-hover-bg-color: #333;
+    --fc-button-hover-border-color: #d4af37;
+    --fc-button-active-bg-color: #d4af37;
+    --fc-button-active-border-color: #d4af37;
+    --fc-button-active-text-color: #000;
+    --fc-today-bg-color: rgba(212, 175, 55, 0.05);
+}
+.fc .fc-toolbar-title { font-family: 'Playfair Display', serif; color: #d4af37; font-size: 1.5rem; }
+.fc .fc-button { text-transform: capitalize; font-weight: 600; border-radius: 6px; padding: 8px 16px; transition: all 0.3s ease; }
+.fc .fc-timegrid-slot { height: 2.5em; }
+.fc .fc-col-header-cell-cushion { color: #fff; padding: 10px; }
+.fc .fc-timegrid-axis-cushion { color: #888; font-size: 0.85rem; }
+.fc-theme-standard td, .fc-theme-standard th { border-color: #2a2a2a; }
+.fc-event { border: none !important; border-radius: 6px; padding: 2px 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+.fc-v-event .fc-event-main { color: #fff; }
+input[type="datetime-local"]::-webkit-calendar-picker-indicator { filter: invert(1); }
+
+/* ==========================================================================
+   6. LANDING PAGE FIXES
+   ========================================================================== */
+.index-page .navbar { background-color: rgba(0, 0, 0, 0.95); border-bottom: 1px solid #222; padding: 1rem 0; }
+.index-page .hero {
+    position: relative; width: 100%; min-height: 85vh; display: flex; align-items: center; justify-content: center; text-align: center;
+    padding-top: 100px;
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+    background-attachment: fixed;
+}
+.index-page .hero h1 { font-size: 3.5rem; margin-bottom: 1.5rem; }
+.index-page .hero p { font-size: 1.2rem; color: #ddd !important; max-width: 700px; margin: 0 auto 2rem; }
+.index-page .section-padding { padding: 80px 0; }
+footer { background-color: #050505; padding: 60px 0; border-top: 1px solid #222; }
+
+/* ==========================================================================
+   7. EFECTOS DEL CLIENTE (Servicios y Tienda)
+   ========================================================================== */
+.service-box { position: relative; overflow: hidden; border-radius: 15px; cursor: pointer; transition: 0.4s; border: 2px solid transparent; height: 280px; }
+.service-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+.service-box:hover { transform: scale(1.02); border-color: var(--gold); box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); }
+.service-box:hover img { transform: scale(1.05); filter: brightness(0.7); }
+.service-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 25px; display: flex; flex-direction: column; justify-content: flex-end; background: linear-gradient(to top, rgba(0,0,0,0.95) 20%, transparent); }
+
+.flip-card { background-color: transparent; width: 100%; height: 350px; perspective: 1000px; }
+.flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; border-radius: 15px;}
+.flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
+.flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 15px; border: 1px solid #333; }
+.flip-card-front { background-color: #1a1a1a; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
+.flip-card-back { background-color: var(--gold); color: black; transform: rotateY(180deg); padding: 25px; display: flex; flex-direction: column; justify-content: center; }
+.flip-card-back h3 { color: #000 !important; margin-bottom: 10px; }
+.flip-card-back p { color: #333 !important; font-weight: 500; margin-bottom: 20px; }
+
+/* Otros */
+.login-card { background-color: var(--card-bg); border: 1px solid #333; padding: 40px; border-radius: 15px; width: 100%; max-width: 420px; }
+.swal2-popup { background: #1a1a1a !important; color: #fff !important; border: 1px solid #444 !important; }
+
+/* ==========================================================================
+   8. ZONA DE RESERVAS (Booking - UX Fix para Barberos Múltiples)
+   ========================================================================== */
+#contenedor-barberos {
+    max-height: 480px;
+    overflow-y: auto;
+    padding-right: 15px;
+    margin: 0;
+}
+#contenedor-barberos::-webkit-scrollbar {
+    width: 6px;
+    background-color: #1a1a1a;
+}
+#contenedor-barberos::-webkit-scrollbar-thumb {
+    background-color: #d4af37;
+    border-radius: 10px;
+}
+#contenedor-barberos::-webkit-scrollbar-thumb:hover {
+    background-color: #bfa02e;
+}
+
+/* ==========================================================================
+   9. RESPONSIVE EXTRA PARA MÓVILES/TABLETS
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* El menú lateral se convierte en un cajón deslizante */
+    .sidebar {
+        position: fixed;
+        left: -280px; /* Oculto fuera de la pantalla */
+        top: 0;
+        bottom: 0;
+        width: 280px;
+        z-index: 1050;
+        background-color: #121212 !important; /* Fondo oscuro sólido */
+        transition: left 0.3s ease-in-out;
+        box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+    }
+
+    /* Clase que añade JS al pulsar el botón de menú */
+    .sidebar.show-mobile {
+        left: 0; /* Aparece en pantalla */
+    }
+
+    /* El contenido principal ocupa el 100% en móviles */
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    /* Achicamos los textos gigantes de los reportes para que quepan */
+    #reporte-ingresos {
+        font-size: 2.5rem !important;
+    }
+
+    /* Las cajas de los contadores de arriba las hacemos más pequeñas */
+    .premium-card h3 {
+        font-size: 1.5rem !important;
+    }
+
+    /* Ajustes extra para móvil */
+    .table-responsive {
+        border-radius: 8px;
+    }
+    #contenedor-barberos {
+        max-height: 300px;
+    }
+}
+
+/* Quitamos las barras de scroll feas horizontales en tablas y las ponemos doradas */
+.table-responsive::-webkit-scrollbar {
+    height: 6px;
+}
+.table-responsive::-webkit-scrollbar-thumb {
+    background-color: #d4af37;
+    border-radius: 10px;
+}

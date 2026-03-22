@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Profesional - Barbería J - Admin</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app-wrapper">
+    <nav class="sidebar" id="sidebarMenu">
+        <div class="sidebar-header border-bottom border-secondary pb-3 mb-4 mt-2 position-relative">
+            <span class="fs-4 text-gold fw-bold"><i class="bi bi-scissors"></i> Barbería J</span>
+            <button class="btn btn-sm btn-outline-secondary d-md-none position-absolute top-0 end-0" onclick="toggleSidebar()"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <ul class="nav flex-column sidebar-nav">
+            <li class="nav-item"><a class="nav-link active" id="nav-dashboard" href="#" onclick="volverAlDashboard(event)"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" onclick="cargarCitasCompleta(event)"><i class="bi bi-journal-bookmark"></i> Historial Citas</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" onclick="cargarBarberos(event)"><i class="bi bi-person-badge"></i> Barberos</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" onclick="cargarServicios(event)"><i class="bi bi-list-stars"></i> Servicios</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" onclick="cargarUsuarios(event)"><i class="bi bi-people"></i> Usuarios</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" onclick="cargarProductos(event)"><i class="bi bi-cart4"></i> Productos</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" onclick="cargarReportes(event)"><i class="bi bi-graph-up-arrow"></i> Reportes</a></li>
+        </ul>
+        <div class="sidebar-footer mt-auto pt-3 border-top border-secondary">
+            <button onclick="cerrarSesion()" class="btn btn-outline-danger w-100 btn-sm"><i class="bi bi-box-arrow-left"></i> Salir</button>
+        </div>
+    </nav>
+
+    <main class="main-content p-3 p-md-4 w-100 bg-dark text-white">
+        <header class="header-bar d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-outline-gold d-md-none me-3" onclick="toggleSidebar()"><i class="bi bi-list fs-5"></i></button>
+                <h4 class="mb-0 text-gold fw-bold" id="header-titulo">Dashboard General</h4>
+            </div>
+            <div class="user-actions d-flex align-items-center">
+                <i class="bi bi-person-circle text-gold me-2 fs-4"></i>
+                <span id="usuario-email" class="text-gold fw-bold me-3 d-none d-sm-inline">Logueando...</span>
+            </div>
+        </header>
+
+        <div id="zona-dashboard" class="seccion-panel">
+            <div class="row g-3 mb-4 text-center">
+                <div class="col-6 col-md-3"><div class="card premium-card p-3 border-start border-5 border-success"><h6 class="text-white opacity-75 mb-1 small text-truncate fw-bold">Confirmadas</h6><h3 class="text-success mb-0 fw-bold" id="counter-confirmadas">0</h3></div></div>
+                <div class="col-6 col-md-3"><div class="card premium-card p-3 border-start border-5 border-warning"><h6 class="text-white opacity-75 mb-1 small text-truncate fw-bold">Pendientes</h6><h3 class="text-warning mb-0 fw-bold" id="counter-pendientes">0</h3></div></div>
+                <div class="col-6 col-md-3"><div class="card premium-card p-3 border-start border-5 border-danger"><h6 class="text-white opacity-75 mb-1 small text-truncate fw-bold">Canceladas</h6><h3 class="text-danger mb-0 fw-bold" id="counter-canceladas">0</h3></div></div>
+                <div class="col-6 col-md-3"><div class="card premium-card p-3 border-start border-5 border-info"><h6 class="text-white opacity-75 mb-1 small text-truncate fw-bold">Clientes BBDD</h6><h3 class="text-info mb-0 fw-bold" id="counter-clientes">0</h3></div></div>
+            </div>
+
+            <div class="row mb-4 g-4">
+                <div class="col-lg-8">
+                    <div class="card premium-card p-3 h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="text-gold m-0 fs-6 fs-md-5 fw-bold">Próximas Citas (Hoy)</h5>
+                            <button class="btn btn-sm btn-outline-gold" onclick="document.querySelectorAll('.nav-link')[1].click()">Ver todas</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover align-middle mb-0 text-nowrap">
+                                <thead class="text-gold"><tr><th>Hora</th><th>Cliente</th><th>Barbero</th><th>Estado</th></tr></thead>
+                                <tbody id="tabla-mini-citas"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card premium-card p-3 h-100 d-flex flex-column align-items-center justify-content-center">
+                        <h5 class="text-gold mb-3 w-100 text-start fw-bold">Estado Global</h5>
+                        <div id="grafico-estados" class="w-100"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card premium-card p-2 p-md-4">
+                        <h5 class="text-gold mb-3 fw-bold">Agenda Visual</h5>
+                        <div id="calendario-visual" style="min-height: 400px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="zona-citas-completa" class="seccion-panel d-none">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <button class="btn btn-sm btn-gold" onclick="abrirFormularioCita('crear')"><i class="bi bi-calendar-plus"></i> Nueva Cita Manual</button>
+            </div>
+            <div id="form-nueva-cita" class="card premium-card p-3 p-md-4 mb-4 d-none">
+                <h5 id="titulo-form-cita" class="text-gold mb-3 border-bottom border-secondary pb-2">Programar Reserva</h5>
+                <form onsubmit="guardarCitaManual(event)">
+                    <input type="hidden" id="cita-id-hidden">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label text-gold small fw-bold">Cliente</label>
+                            <select id="sel-cliente" class="form-select bg-dark text-white border-secondary" required></select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label text-gold small fw-bold">Barbero</label>
+                            <select id="sel-barbero" class="form-select bg-dark text-white border-secondary" onchange="buscarHorasLibresAdmin()" required></select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label text-gold small fw-bold">Servicio</label>
+                            <select id="sel-servicio" class="form-select bg-dark text-white border-secondary" onchange="buscarHorasLibresAdmin()" required></select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label text-gold small fw-bold">Fecha</label>
+                            <input type="date" id="cita-fecha" class="form-control bg-dark text-white border-secondary" onchange="buscarHorasLibresAdmin()" required>
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <label class="form-label text-gold small fw-bold d-none" id="label-horas-admin">Horas Disponibles</label>
+                            <div id="contenedor-horas-admin" class="d-flex flex-wrap gap-2"></div>
+                            <input type="hidden" id="hora-seleccionada-admin">
+                        </div>
+
+                        <div class="col-12 text-end mt-4">
+                            <button type="button" class="btn btn-outline-secondary me-2" onclick="cerrarFormulario('form-nueva-cita')">Cancelar</button>
+                            <button type="submit" class="btn btn-success px-4"><i class="bi bi-save"></i> Guardar Reserva</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="table-responsive premium-card p-2">
+                <table class="table table-dark table-hover align-middle text-center mb-0 text-nowrap">
+                    <thead class="text-gold"><tr><th>Fecha</th><th>Cliente</th><th>Barbero</th><th>Servicio</th><th>Estado</th><th>Acciones</th></tr></thead>
+                    <tbody id="tabla-citas-body" class="text-white"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="zona-barberos" class="seccion-panel d-none">
+            <div class="d-flex justify-content-end mb-4">
+                <button class="btn btn-sm btn-gold" onclick="mostrarFormularioBarbero('crear')"><i class="bi bi-person-plus"></i> Nuevo Barbero</button>
+            </div>
+            <div id="formulario-barbero" class="card premium-card p-3 p-md-4 mb-4 d-none">
+                <h5 id="titulo-form-barbero" class="text-gold mb-3 border-bottom border-secondary pb-2 fw-bold">Ficha del Barbero</h5>
+                <form onsubmit="procesarFormularioBarbero(event)">
+                    <input type="hidden" id="barb-id">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label text-gold small fw-bold">Nombre</label>
+                            <input type="text" id="barb-nombre" class="form-control bg-dark text-white border-secondary" placeholder="Ej. Antonio" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label text-gold small fw-bold">Apellidos</label>
+                            <input type="text" id="barb-apellidos" class="form-control bg-dark text-white border-secondary" placeholder="Ej. García" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label text-gold small fw-bold">Teléfono</label>
+                            <input type="tel" id="barb-tlf" class="form-control bg-dark text-white border-secondary" placeholder="Ej. 600123456" pattern="[0-9]{9}" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label text-gold small fw-bold">Turno de Trabajo</label>
+                            <select id="barb-turno" class="form-select bg-dark text-white border-secondary" required>
+                                <option value="" disabled selected>Seleccionar...</option>
+                                <option value="MAÑANA">Mañana</option>
+                                <option value="TARDE">Tarde</option>
+                                <option value="COMPLETO">Jornada Completa</option> </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-gold small fw-bold">Correo Electrónico</label>
+                            <input type="email" id="barb-email" class="form-control bg-dark text-white border-secondary" placeholder="antonio@barberia.com" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-gold small fw-bold">Contraseña</label>
+                            <input type="password" id="barb-pass" class="form-control bg-dark text-white border-secondary" placeholder="***">
+                            <small class="text-white opacity-75" style="font-size: 0.75rem;">Déjalo en blanco si no quieres cambiarla</small>
+                        </div>
+                        <div class="col-12 text-end mt-4">
+                            <button type="button" class="btn btn-outline-secondary me-2" onclick="cerrarFormulario('formulario-barbero')">Cancelar</button>
+                            <button type="submit" class="btn btn-success px-4"><i class="bi bi-save"></i> Guardar Barbero</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="table-responsive premium-card p-2">
+                <table class="table table-dark table-hover align-middle text-center mb-0 text-nowrap">
+                    <thead class="text-gold"><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Turno</th><th>Acciones</th></tr></thead>
+                    <tbody id="tabla-barberos-body" class="text-white"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="zona-servicios" class="seccion-panel d-none">
+            <div class="d-flex justify-content-end mb-4"><button class="btn btn-sm btn-gold" onclick="mostrarFormularioServicio('crear')"><i class="bi bi-plus"></i> Nuevo Servicio</button></div>
+            <div id="formulario-servicio" class="card premium-card p-3 p-md-4 mb-4 d-none">
+                <h5 id="titulo-form-servicio" class="text-gold mb-3 border-bottom border-secondary pb-2">Detalles del Servicio</h5>
+                <form onsubmit="procesarFormularioServicio(event)">
+                    <input type="hidden" id="serv-id">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label text-gold small fw-bold">Nombre del Servicio</label>
+                            <input type="text" id="serv-nombre" class="form-control bg-dark text-white border-secondary" placeholder="Ej. Corte Clásico" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label text-gold small fw-bold">Precio (€)</label>
+                            <input type="number" step="0.01" id="serv-precio" class="form-control bg-dark text-white border-secondary" placeholder="15.00" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label text-gold small fw-bold">Duración (Min)</label>
+                            <input type="number" id="serv-duracion" class="form-control bg-dark text-white border-secondary" placeholder="30" required>
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label text-gold small fw-bold">URL de la Imagen</label>
+                            <input type="text" id="serv-imagen" class="form-control bg-dark text-white border-secondary" placeholder="https://ejemplo.com/foto.jpg">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label text-gold small fw-bold">Descripción Corta</label>
+                            <input type="text" id="serv-desc" class="form-control bg-dark text-white border-secondary" placeholder="Corte a tijera con lavado..." required>
+                        </div>
+                        <div class="col-12 text-end mt-4">
+                            <button type="button" class="btn btn-outline-secondary me-2" onclick="cerrarFormulario('formulario-servicio')">Cancelar</button>
+                            <button type="submit" class="btn btn-success px-4"><i class="bi bi-save"></i> Guardar Servicio</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="table-responsive premium-card p-2">
+                <table class="table table-dark table-hover align-middle text-center mb-0 text-nowrap">
+                    <thead class="text-gold"><tr><th>Nombre</th><th>Descripción</th><th>Precio</th><th>Duración</th><th>Acciones</th></tr></thead>
+                    <tbody id="tabla-servicios-body" class="text-white"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="zona-productos" class="seccion-panel d-none">
+            <div class="d-flex justify-content-end mb-4">
+                <button class="btn btn-sm btn-gold" onclick="mostrarFormularioProducto('crear')"><i class="bi bi-plus"></i> Nuevo Producto</button>
+            </div>
+            <div id="formulario-producto" class="card premium-card p-3 p-md-4 mb-4 d-none">
+                <h5 id="titulo-form-producto" class="text-gold mb-3 border-bottom border-secondary pb-2">Ficha de Producto</h5>
+                <form onsubmit="procesarFormularioProducto(event)">
+                    <input type="hidden" id="prod-id">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label text-gold small fw-bold">Nombre</label>
+                            <input type="text" id="prod-nombre" class="form-control bg-dark text-white border-secondary" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label text-gold small fw-bold">Precio (€)</label>
+                            <input type="number" step="0.01" id="prod-precio" class="form-control bg-dark text-white border-secondary" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label text-gold small fw-bold">Stock</label>
+                            <input type="number" id="prod-stock" class="form-control bg-dark text-white border-secondary" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-gold small fw-bold">URL Imagen</label>
+                            <input type="text" id="prod-imagen" class="form-control bg-dark text-white border-secondary">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label text-gold small fw-bold">Descripción</label>
+                            <input type="text" id="prod-desc" class="form-control bg-dark text-white border-secondary" required>
+                        </div>
+                        <div class="col-12 text-end mt-4">
+                            <button type="button" class="btn btn-outline-secondary me-2" onclick="cerrarFormulario('formulario-producto')">Cancelar</button>
+                            <button type="submit" class="btn btn-success px-4"><i class="bi bi-save"></i> Guardar Producto</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="table-responsive premium-card p-2">
+                <table class="table table-dark table-hover align-middle text-center mb-0 text-nowrap">
+                    <thead class="text-gold"><tr><th>Nombre</th><th>Descripción</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr></thead>
+                    <tbody id="tabla-productos-body" class="text-white"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="zona-usuarios" class="seccion-panel d-none">
+            <div class="d-flex justify-content-end mb-4">
+                <button class="btn btn-sm btn-gold" onclick="mostrarFormularioUsuario('crear')"><i class="bi bi-person-plus"></i> Nuevo Usuario</button>
+            </div>
+            <div id="formulario-usuario" class="card premium-card p-3 p-md-4 mb-4 d-none">
+                <h5 id="titulo-form-usuario" class="text-gold mb-3 border-bottom border-secondary pb-2">Ficha de Usuario</h5>
+                <form onsubmit="procesarFormularioUsuario(event)">
+                    <input type="hidden" id="usr-id">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label text-gold small fw-bold">Nombre</label>
+                            <input type="text" id="usr-nombre" class="form-control bg-dark text-white border-secondary" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label text-gold small fw-bold">Apellidos</label>
+                            <input type="text" id="usr-apellidos" class="form-control bg-dark text-white border-secondary">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label text-gold small fw-bold">Teléfono</label>
+                            <input type="tel" id="usr-tlf" class="form-control bg-dark text-white border-secondary" pattern="[0-9]{9}">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label text-gold small fw-bold">Rol</label>
+                            <select id="usr-rol" class="form-select bg-dark text-white border-secondary">
+                                <option value="ROLE_CLIENTE">Cliente</option>
+                                <option value="ROLE_BARBERO">Barbero</option>
+                                <option value="ROLE_ADMIN">Admin</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-gold small fw-bold">Correo Electrónico (Login)</label>
+                            <input type="email" id="usr-email" class="form-control bg-dark text-white border-secondary" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-gold small fw-bold">Contraseña</label>
+                            <input type="password" id="usr-pass" class="form-control bg-dark text-white border-secondary">
+                            <small class="text-white opacity-75" style="font-size: 0.75rem;">Déjalo en blanco si no quieres cambiarla</small>
+                        </div>
+                        <div class="col-12 text-end mt-4">
+                            <button type="button" class="btn btn-outline-secondary me-2" onclick="cerrarFormulario('formulario-usuario')">Cancelar</button>
+                            <button type="submit" class="btn btn-success px-4"><i class="bi bi-save"></i> Guardar Usuario</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="table-responsive premium-card p-2">
+                <table class="table table-dark table-hover align-middle text-center mb-0 text-nowrap">
+                    <thead class="text-gold"><tr><th>Nombre</th><th>Email</th><th style="width: 200px;">Rol</th><th>Acciones</th></tr></thead>
+                    <tbody id="tabla-usuarios-body" class="text-white"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="zona-reportes" class="seccion-panel d-none">
+            <h3 class="text-gold border-bottom border-secondary pb-2 mb-4 fs-5 fs-md-3">Reporte de Ingresos y Citas</h3>
+            <div class="row g-4">
+                <div class="col-12 col-md-6">
+                    <div class="card premium-card p-4 text-center">
+                        <h5 class="text-white opacity-75 fw-bold">Ingresos Totales (Completadas)</h5>
+                        <h1 class="text-success display-5 fw-bold" id="reporte-ingresos">0.00€</h1>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="card premium-card p-4 text-center">
+                        <h5 class="text-white opacity-75 fw-bold">Efectividad de Citas</h5>
+                        <div id="grafico-reporte-citas"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById('sidebarMenu').classList.toggle('show-mobile');
+    }
+</script>
+
+<script src="js/admin.js"></script>
+</body>
+</html>
