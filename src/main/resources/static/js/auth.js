@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8081/api/auth';
+const API_BASE_URL = '/api/auth';
 
 function manejarLogin(e) {
     e.preventDefault();
