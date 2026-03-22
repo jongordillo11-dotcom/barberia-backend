@@ -1,4 +1,4 @@
-const API_BASE_URL = '/api/auth';
+const API_BASE_URL = 'https://barberia-backend-production-9536.up.railway.app/api/auth';
 
 function manejarLogin(e) {
     e.preventDefault();
