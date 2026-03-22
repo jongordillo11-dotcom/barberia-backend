@@ -1,4 +1,4 @@
-const API_BASE_URL = '/api';
+const API_BASE_URL = 'https://barberia-backend-production-9536.up.railway.app/api';
 const token = localStorage.getItem('token_barberia');
 let servicioElegidoId = null;
 let barberoElegidoId = null;
